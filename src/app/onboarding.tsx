@@ -1,5 +1,8 @@
+import Button from '../components/Button'
 import { useState } from "react";
-import { Text, Button, Image, StyleSheet, View } from "react-native";
+import { useRouter } from 'expo-router';
+import { Text, Image, StyleSheet, View } from "react-native";
+
 
 const onboardingSteps = [
   {
@@ -21,25 +24,31 @@ const onboardingSteps = [
 ];
 
 export default function OnboardingScreen() {
+  const router = useRouter()
   const [step, setStep] = useState(0);
 
   const handleNext = () => {
     if (step < onboardingSteps.length - 1) {
         setStep(step + 1)
     } else {
-        // Home
+      router.replace('/');
     }
   };
+
+  const handleSkip = () => {
+    router.replace('/')
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
+        <Image style={styles.logo} source={require('../assets/images/mascote.png')} />
         <Text style={styles.title}>{onboardingSteps[step].title}</Text>
         <Text style={styles.subtitle}>{onboardingSteps[step].subtitle}</Text>
       </View>
       <View style={styles.footer}>
         <Button title={step === onboardingSteps.length - 1 ? 'COMEÇAR' : 'PRÓXIMO'} onPress={handleNext} />
-        <Button title="Pular" />
+        <Button title="Pular" variant="secondary" onPress={handleSkip}/>
       </View>
     </View>
   );
