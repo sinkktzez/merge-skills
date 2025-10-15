@@ -1,31 +1,65 @@
-import { StyleSheet, Text, View, Image } from "react-native"
-import Button from "@/src/components/Button";
-import { useRouter } from 'expo-router';
-   
-export default function ProfileScreen(){
-    const router = useRouter();
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Meu Perfil</Text>
-            <Image source={{
-                uri: 'https://github.com/sinkktzez.png'}} style={styles.profileImage}/>
-            <View style={styles.profileInfo}>
-                <View style={styles.infoItem}>
-                    <Text style={styles.infoLabel}>Nome:</Text>
-                    <Text style={styles.infoValue}>José Vitor Ferro Teixeira</Text>
-                </View>
-                <View style={styles.infoItem}>
-                    <Text style={styles.infoLabel}>Email:</Text>
-                    <Text style={styles.infoValue}>sinkktzez@gmail.com</Text>
-                </View>
-            </View>
-            <View style={styles.footer}>
-                <Button title="Editar Perfil" onPress={() => router.replace('/onboarding')}/>
-            </View>
-        </View>
+import Button from '@/components/Button';
+import { ProfileStorage } from '@/services/profileStorage';
+import { UserProfile } from '@/types/profile';
+import { router, useFocusEffect } from 'expo-router'
+import React, { useCallback, useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+
+export default function ProfileScreen() {
+    const [ profile, setProfile ] = useState<UserProfile>({
+      name: 'Usuário',
+      email: 'usuario@email.com'
+    })
+
+    useFocusEffect(
+      useCallback(() => {
+        async function loadProfile() {
+          const savedProfile = await ProfileStorage.load();
+
+          if (savedProfile) {
+            setProfile(savedProfile);
+          }
+        }
+
+        loadProfile();
+      }, [])
     )
-}
  
+    function handleEditProfile() {
+  router.push('/profile/edit-profile');
+}
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Meu Perfil</Text>
+
+      {/* Foto padrão */}
+      <Image 
+      source={profile.fileUri ? {uri: profile.fileUri} : { uri: 'https://github.com/sinkktzez.png'}}
+      // source={{ uri: 'https://github.com/sinkktzez.png'}} 
+      style={styles.profileImage} />
+
+      {/* Informações do Perfil */}
+      <View style={styles.profileInfo}>
+        <View style={styles.infoItem}>
+          <Text style={styles.infoLabel}>Nome:</Text>
+          <Text style={styles.infoValue}>{profile.name}</Text>
+        </View>
+        
+        <View style={styles.infoItem}>
+          <Text style={styles.infoLabel}>Email:</Text>
+          <Text style={styles.infoValue}>{profile.email}</Text>
+        </View>
+      </View>
+
+      {/* Botões */}
+      <View style={styles.footer}>
+        <Button title='EDITAR PERFIL' onPress={handleEditProfile} />
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -75,5 +109,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e0e0e0',
   },
- 
+
 });

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Animated, Pressable, PressableProps, StyleSheet, Text, View } from 'react-native';
 
-type Variant = 'primary' | 'secondary';
+type Variant = 'primary' | 'secondary' | 'info';
 
 type Props = PressableProps & {
     title: string;
@@ -37,9 +37,9 @@ export default function Button({title, variant = 'primary', ...rest}: Props) {
     outputRange: [1, 0],
   });
 
-  const buttonShadowVariantStyle = variant === 'secondary' ? styles.secondaryButtonShadow : styles.primaryButtonShadow;
-  const buttonVariantStyle = variant === 'secondary' ? styles.secondaryButton : styles.primaryButton;
-  const buttonTextVariantStyle = variant === 'secondary' ? styles.secondaryButtonText : styles.primaryButtonText;
+  const buttonShadowVariantStyle = variant === 'secondary' ? styles.secondaryButtonShadow : variant === 'info' ? styles.infoButtonShadow : styles.primaryButtonShadow;
+  const buttonVariantStyle = variant === 'secondary' ? styles.secondaryButton : variant === 'info' ? styles.infoButton : styles.primaryButton;
+  const buttonTextVariantStyle = variant === 'secondary' ? styles.secondaryButtonText : variant === 'info' ? styles.infoButtonText : styles.primaryButtonText;
 
   return (
     
@@ -94,6 +94,9 @@ const styles = StyleSheet.create({
   secondaryButtonShadow: {
     backgroundColor: '#a3a3a3',
   },
+  infoButtonShadow: {
+    backgroundColor: '#1565C0',
+  },
   button: {
     position: 'absolute',
     top: 0,
@@ -114,6 +117,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4f4f4',
     borderColor: '#bdbdbd',
   },
+  infoButton: {
+    backgroundColor: '#2196F3',
+    borderColor: '#1565C0',
+  },
   buttonText: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -124,5 +131,8 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: '#4a4a4a',
+  },
+  infoButtonText: {
+    color: '#FFFFFF',
   }
 });

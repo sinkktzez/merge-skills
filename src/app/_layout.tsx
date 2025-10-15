@@ -1,10 +1,22 @@
-import { Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
-export default function RootLayout() {
+export default function RootLayout(){
+    const [loaded] = useFonts({
+    'Space-Regular': require('@/assets/fonts/SpaceMono-Regular.ttf'),
+    'JetBrains-Regular': require('@/assets/fonts/JetBrainsMono-Regular.ttf'),
+    'JetBrains-Medium': require('@/assets/fonts/JetBrainsMono-Medium.ttf'),
+  });
+
+
     return (
-        <Stack>
-            <Stack.Screen name='onboarding' options={{ title: "Home", headerShown: false}}/>
-            <Stack.Screen name='(tabs)' options={{ headerShown: false}}/>
+        <>
+        <StatusBar style='auto' />
+        <Stack initialRouteName="onboarding">
+            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
+        </>
     )
 }
